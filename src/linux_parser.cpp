@@ -5,8 +5,6 @@
 
 #include "linux_parser.h"
 
-#include <iostream>
-
 using std::stof;
 using std::string;
 using std::to_string;
@@ -68,7 +66,7 @@ vector<int> LinuxParser::Pids() {
   return pids;
 }
 
-// TODO: Read and return the system memory utilization
+// DONE: Read and return the system memory utilization
 float LinuxParser::MemoryUtilization() 
 {
   string mem_total_str{}, mem_total{}, mem_free_str{}, mem_free{};
@@ -83,8 +81,8 @@ float LinuxParser::MemoryUtilization()
   linestream.str(line);
   linestream >> mem_free_str >> mem_free;
 
-  float m_total{std::stof(mem_total)};
-  float m_free{std::stof(mem_free)};
+  float m_total{stof(mem_total)};
+  float m_free{stof(mem_free)};
   
   return ((m_total - m_free) / m_total); 
 }
@@ -108,11 +106,41 @@ long LinuxParser::IdleJiffies() { return 0; }
 // TODO: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() { return {}; }
 
-// TODO: Read and return the total number of processes
-int LinuxParser::TotalProcesses() { return 0; }
+namespace detail{
+int ParseProcStat(std::string searched_variable)
+{
+  std::ifstream filestream(LinuxParser::kProcDirectory + 
+                           LinuxParser::kStatFilename);
 
-// TODO: Read and return the number of running processes
-int LinuxParser::RunningProcesses() { return 0; }
+  string line{}, key{}, value{};
+
+  while (std::getline(filestream, line)) 
+  {
+    std::istringstream linestream(line);
+    while (linestream >> key >> value) 
+    {
+      if (key == searched_variable) 
+      {
+        return stof(value);
+      }
+    }
+  }
+  return 0.f; // pedantic, probably better to throw an exception
+              // in case if the file is crashed
+} 
+} // namespace detail
+
+// DONE: Read and return the total number of processes
+int LinuxParser::TotalProcesses() 
+{ 
+  return detail::ParseProcStat("processes"); 
+}
+
+// DONE: Read and return the number of running processes
+int LinuxParser::RunningProcesses() 
+{ 
+  return detail::ParseProcStat("procs_running"); 
+}
 
 // TODO: Read and return the command associated with a process
 // REMOVE: [[maybe_unused]] once you define the function
