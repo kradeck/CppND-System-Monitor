@@ -16,7 +16,8 @@ using std::vector;
 
 
 System::System() :
-    operating_system_{LinuxParser::OperatingSystem()}
+    operating_system_{LinuxParser::OperatingSystem()},
+    kernel_{LinuxParser::Kernel()}
 {
     // The parameters loaded in the ctor are constant, and rather
     // they won't change during the program execution (like the OS name).
@@ -29,8 +30,8 @@ Processor& System::Cpu() { return cpu_; }
 // TODO: Return a container composed of the system's processes
 vector<Process>& System::Processes() { return processes_; }
 
-// TODO: Return the system's kernel identifier (string)
-std::string System::Kernel() { return string(); }
+// DONE: Return the system's kernel identifier (string)
+std::string System::Kernel() { return kernel_; }
 
 // TODO: Return the system's memory utilization
 float System::MemoryUtilization() { return 0.0; }
