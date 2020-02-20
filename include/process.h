@@ -16,8 +16,13 @@ class Process {
   long int UpTime();                       // TODO: See src/process.cpp
   bool operator<(Process const& a) const;  // TODO: See src/process.cpp
 
+  bool IsOld() const { return is_old_; }
+  void IsOld(bool fresh) { is_old_ = fresh; } 
+
   // TODO: Declare any necessary private members
  private:
+    bool is_old_{false};
+
 };
 
 #endif

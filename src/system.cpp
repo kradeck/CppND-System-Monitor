@@ -28,7 +28,39 @@ System::System() :
 Processor& System::Cpu() { return cpu_; }
 
 // TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+vector<Process>& System::Processes() 
+{ 
+    std::vector<int> pids{LinuxParser::Pids()};
+
+    for(auto& proc : processes_)
+    {
+        proc.IsOld(true);
+    }
+
+    for(auto pid : pids)
+    {
+        bool exists{false};
+        for(auto& proc : processes_)
+        {
+            if(proc.Pid() == pid)
+            {
+                proc.IsOld(false);
+                exists = true;
+                // proc.Update();
+                break;
+            }
+        }
+
+        if(!exists)
+        {
+            // create the new one
+        }        
+    }
+
+    std::remove_if(processes_.begin(), processes_.end(), [](const auto& p){ return p.IsOld(); });
+
+    return processes_; 
+}
 
 // DONE: Return the system's kernel identifier (string)
 std::string System::Kernel() { return kernel_; }
