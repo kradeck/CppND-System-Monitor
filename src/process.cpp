@@ -13,7 +13,8 @@ using std::vector;
 
 Process::Process(int pid) : 
     pid_{pid},
-    uid_{LinuxParser::Uid(pid)}    
+    uid_{LinuxParser::Uid(pid)},
+    cmdline_{LinuxParser::Command(pid)}  
 {    
     user_ = LinuxParser::User(std::stol(uid_));
     Update();
@@ -29,8 +30,8 @@ int Process::Pid() { return pid_; }
 // TODO: Return this process's CPU utilization
 float Process::CpuUtilization() { return 0; }
 
-// TODO: Return the command that generated this process
-string Process::Command() { return string(); }
+// DONE: Return the command that generated this process
+string Process::Command() { return cmdline_; }
 
 // DONE: Return this process's memory utilization
 string Process::Ram() { return ram_mb_; }

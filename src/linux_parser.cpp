@@ -172,9 +172,17 @@ int LinuxParser::RunningProcesses()
   return detail::ParseProcStat("procs_running"); 
 }
 
-// TODO: Read and return the command associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
+// DONE: Read and return the command associated with a process
+string LinuxParser::Command(int pid) 
+{ 
+  std::ifstream filestream(LinuxParser::kProcDirectory + 
+                           std::to_string(pid) +
+                           LinuxParser::kCmdlineFilename);
+
+  string line{};
+  std::getline(filestream, line); 
+  return line;
+}
 
 namespace detail{
 string ParseProcPidStatus(const int pid, std::string&& searched_variable)
@@ -209,7 +217,6 @@ string ParseProcPidStatus(const int pid, std::string&& searched_variable)
 } // namespace detail
 
 // DONE: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Ram(int pid) 
 { 
   string ram_kb{detail::ParseProcPidStatus(pid, "VmSize")};
@@ -220,14 +227,12 @@ string LinuxParser::Ram(int pid)
 }
 
 // DONE: Read and return the user ID associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Uid(int pid) 
 { 
   return detail::ParseProcPidStatus(pid, "Uid"); 
 }
 
 // TODO: Read and return the user associated with a process
-// REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::User(int pid) 
 { 
   std::ifstream filestream(kPasswordPath);
