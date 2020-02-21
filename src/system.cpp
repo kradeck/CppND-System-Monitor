@@ -54,6 +54,8 @@ vector<Process>& System::Processes()
         if(!exists)
         {
             // create the new one
+            Process p(pid);
+            processes_.push_back(p);
         }        
     }
 
