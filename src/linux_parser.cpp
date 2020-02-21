@@ -186,15 +186,13 @@ int ParseProcStat(std::string searched_variable)
 
   string line{}, key{}, value{};
 
-  while (std::getline(filestream, line)) 
+  while (std::getline(filestream, line))
   {
     std::istringstream linestream(line);
-    while (linestream >> key >> value) 
+    linestream >> key >> value; 
+    if (key == searched_variable) 
     {
-      if (key == searched_variable) 
-      {
-        return stof(value);
-      }
+      return stof(value);
     }
   }
   return 0.f; // pedantic, probably better to throw an exception
@@ -244,13 +242,11 @@ string ParseProcPidStatus(const int pid, std::string&& searched_variable)
   while (std::getline(filestream, line)) 
   {
     std::istringstream linestream(line);
-    while (linestream >> key) 
+    linestream >> key;
+    if (key == searched_variable) 
     {
-      if (key == searched_variable) 
-      {
-        linestream >> value;
-        return value;
-      }
+      linestream >> value;
+      return value;
     }
   }
   return {}; // pedantic, probably better to throw an exception
