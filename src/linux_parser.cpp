@@ -136,8 +136,7 @@ vector<int> ParseProcPidStat(const int pid,
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
 
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
+// DONE: Read and return the number of active jiffies for a PID
 long LinuxParser::ActiveJiffies(int pid)
 {
   unsigned position{14}; // position in the file
@@ -276,7 +275,7 @@ string LinuxParser::Uid(int pid)
   return detail::ParseProcPidStatus(pid, "Uid"); 
 }
 
-// TODO: Read and return the user associated with a process
+// DONE: Read and return the user associated with a process
 string LinuxParser::User(int pid) 
 { 
   std::ifstream filestream(kPasswordPath);
@@ -298,8 +297,7 @@ string LinuxParser::User(int pid)
   return string(); 
 }
 
-// TODO: Read and return the uptime of a process
-// REMOVE: [[maybe_unused]] once you define the function
+// DONE: Read and return the uptime of a process
 long LinuxParser::UpTime(int pid) 
 { 
   unsigned position{22}; // position in the file
