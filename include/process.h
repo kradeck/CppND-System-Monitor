@@ -21,11 +21,13 @@ class Process {
   bool IsOld() const { return is_old_; }
   void IsOld(bool fresh) { is_old_ = fresh; } 
 
+  void Update();
   // TODO: Declare any necessary private members
  private:
     bool is_old_{false};
     int pid_{};
-
+    std::string uid_{}; // It's good to keep this.
+    std::string ram_mb_{};
 };
 
 #endif

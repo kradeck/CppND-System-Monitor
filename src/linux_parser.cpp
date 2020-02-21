@@ -176,13 +176,55 @@ int LinuxParser::RunningProcesses()
 // REMOVE: [[maybe_unused]] once you define the function
 string LinuxParser::Command(int pid[[maybe_unused]]) { return string(); }
 
-// TODO: Read and return the memory used by a process
-// REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Ram(int pid[[maybe_unused]]) { return string(); }
+namespace detail{
+string ParseProcPidStatus(const int pid, std::string&& searched_variable)
+{
+  std::ifstream filestream(LinuxParser::kProcDirectory + 
+                           std::to_string(pid) +
+                           LinuxParser::kStatusFilename);
 
-// TODO: Read and return the user ID associated with a process
+  string line{}, key{}, value{};
+
+  // variable names in /proc/[pid]/status contains ':' at the end 
+  if(searched_variable.back() != ':')
+  {
+    searched_variable += ":";
+  }
+
+  while (std::getline(filestream, line)) 
+  {
+    std::istringstream linestream(line);
+    while (linestream >> key) 
+    {
+      if (key == searched_variable) 
+      {
+        linestream >> value;
+        return value;
+      }
+    }
+  }
+  return {}; // pedantic, probably better to throw an exception
+             // in case if the file is crashed
+} 
+} // namespace detail
+
+// DONE: Read and return the memory used by a process
 // REMOVE: [[maybe_unused]] once you define the function
-string LinuxParser::Uid(int pid[[maybe_unused]]) { return string(); }
+string LinuxParser::Ram(int pid) 
+{ 
+  string ram_kb{detail::ParseProcPidStatus(pid, "VmSize")};
+  if(ram_kb == "")
+    return {};
+  float ram_mb{0.001f * stof(ram_kb)};
+  return to_string(ram_mb);
+}
+
+// DONE: Read and return the user ID associated with a process
+// REMOVE: [[maybe_unused]] once you define the function
+string LinuxParser::Uid(int pid) 
+{ 
+  return detail::ParseProcPidStatus(pid, "Uid"); 
+}
 
 // TODO: Read and return the user associated with a process
 // REMOVE: [[maybe_unused]] once you define the function

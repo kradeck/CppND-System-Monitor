@@ -46,7 +46,7 @@ vector<Process>& System::Processes()
             {
                 proc.IsOld(false);
                 exists = true;
-                // proc.Update();
+                proc.Update();
                 break;
             }
         }
@@ -56,7 +56,8 @@ vector<Process>& System::Processes()
             // create the new one
             Process p(pid);
             processes_.push_back(p);
-        }        
+        } 
+        
     }
 
     std::remove_if(processes_.begin(), processes_.end(), [](const auto& p){ return p.IsOld(); });
