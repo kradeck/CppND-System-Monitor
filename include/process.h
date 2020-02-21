@@ -28,6 +28,7 @@ class Process {
     int pid_{};
     std::string uid_{}; // It's good to keep this.
     std::string ram_mb_{};
+    std::string user_{};
 };
 
 #endif
