@@ -133,9 +133,6 @@ vector<int> ParseProcPidStat(const int pid,
 } 
 } // namespace detail
 
-// TODO: Read and return the number of jiffies for the system
-long LinuxParser::Jiffies() { return 0; }
-
 // DONE: Read and return the number of active jiffies for a PID
 long LinuxParser::ActiveJiffies(int pid)
 {
@@ -151,11 +148,13 @@ long LinuxParser::ActiveJiffies(int pid)
   return jiffies; 
 }
 
+// data processed in processor class
+// TODO: Read and return the number of jiffies for the system
+//long LinuxParser::Jiffies() { return 0; }
 // TODO: Read and return the number of active jiffies for the system
-long LinuxParser::ActiveJiffies() { return 0; }
-
+//long LinuxParser::ActiveJiffies() { return 0; }
 // TODO: Read and return the number of idle jiffies for the system
-long LinuxParser::IdleJiffies() { return 0; }
+//long LinuxParser::IdleJiffies() { return 0; }
 
 // DONE: Read and return CPU utilization
 vector<string> LinuxParser::CpuUtilization() 
