@@ -101,6 +101,38 @@ long LinuxParser::UpTime()
   return std::stol(uptime);
 }
 
+namespace detail{
+vector<int> ParseProcPidStat(const int pid, 
+                         const unsigned position,
+                         const unsigned num_of_elements)
+{
+  std::ifstream filestream(LinuxParser::kProcDirectory + 
+                           std::to_string(pid) +
+                           LinuxParser::kStatFilename);
+
+  string line{}, value{};
+
+  unsigned iter{0};
+
+  std::getline(filestream, line);
+  std::istringstream linestream(line);
+
+  while(iter++ < position - 1)
+  {
+    linestream >> value;
+  } 
+
+  vector<int> result{};
+  for(unsigned i{0u}; i < num_of_elements; i++)
+  {
+    linestream >> value;
+    result.push_back(std::stol(value));
+  }
+
+  return result;
+} 
+} // namespace detail
+
 // TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
 
@@ -258,24 +290,11 @@ string LinuxParser::User(int pid)
 // REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::UpTime(int pid) 
 { 
-  std::ifstream filestream(LinuxParser::kProcDirectory + 
-                           std::to_string(pid) +
-                           LinuxParser::kStatFilename);
-
-  string line{}, value{};
-
-  unsigned time_pos{22}; 
-  unsigned iter{0};
-
-  std::getline(filestream, line);
-  std::istringstream linestream(line);
-
-  while(iter++ < time_pos)
-  {
-    linestream >> value;
-  } 
+  unsigned position{22}; // position in the file
+  unsigned num_of_elements{1};
+  auto result{detail::ParseProcPidStat(pid, position, num_of_elements)};
   
-  float uptime{std::stof(value)/sysconf(_SC_CLK_TCK)};
+  float uptime{static_cast<float>(result.at(0))/sysconf(_SC_CLK_TCK)};
 
   return static_cast<long>(uptime);
 }
