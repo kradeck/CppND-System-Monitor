@@ -30,6 +30,7 @@ class Process {
     std::string ram_mb_{};
     std::string user_{};
     std::string cmdline_{};
+    long int uptime_{};
 };
 
 #endif
