@@ -28,7 +28,7 @@ void Process::Update()
     long jiffies{LinuxParser::ActiveJiffies(pid_)};
     long sys_uptime{LinuxParser::UpTime()};
     long seconds{sys_uptime - uptime_};
-    cpu_ = static_cast<float>(jiffies) / seconds;
+    cpu_ = static_cast<float>(jiffies) / sysconf(_SC_CLK_TCK) / seconds;
 }
 
 // DONE: Return this process's ID
@@ -53,5 +53,5 @@ long int Process::UpTime() { return uptime_; }
 // REMOVE: [[maybe_unused]] once you define the function
 bool Process::operator<(Process const& a) const 
 { 
-    return  a.ram_mb_ < this->ram_mb_; 
+    return  a.cpu_ < this->cpu_; 
 }
