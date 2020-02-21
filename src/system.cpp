@@ -60,7 +60,7 @@ vector<Process>& System::Processes()
     }
 
     std::remove_if(processes_.begin(), processes_.end(), [](const auto& p){ return p.IsOld(); });
-
+    std::sort(processes_.begin(), processes_.end(),[](const auto& l, const auto& r) {return l<r;});
     return processes_; 
 }
 
