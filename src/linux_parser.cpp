@@ -138,7 +138,19 @@ long LinuxParser::Jiffies() { return 0; }
 
 // TODO: Read and return the number of active jiffies for a PID
 // REMOVE: [[maybe_unused]] once you define the function
-long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
+long LinuxParser::ActiveJiffies(int pid)
+{
+  unsigned position{14}; // position in the file
+  unsigned num_of_elements{4};
+  auto result{detail::ParseProcPidStat(pid, position, num_of_elements)};
+
+  long jiffies{};
+
+  for(auto r : result)
+    jiffies += r;
+
+  return jiffies; 
+}
 
 // TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; }

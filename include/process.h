@@ -31,6 +31,7 @@ class Process {
     std::string user_{};
     std::string cmdline_{};
     long int uptime_{};
+    float cpu_{};
 };
 
 #endif
